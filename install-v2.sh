@@ -68,6 +68,7 @@ while [[ $# -gt 0 ]]; do
 done
 
 test -n "$FORMACLOUD_ID" || die "FORMACLOUD_ID must be provided. Please contact FormaCloud support."
+test -n "$FORMACLOUD_EXTERNALID" || die "FORMACLOUD_EXTERNALID must be provided. Please contact FormaCloud support."
 test -n "$REGIONS" || die "REGIONS must be provided. e.g. us-west-2 us-east-1"
 
 main_region=${REGIONS[0]}
