@@ -83,7 +83,7 @@ fi
 
 tmp_dir=$(mktemp -d)
 tmp_file="$tmp_dir"/formacloud_optima.yaml
-curl -fsSL -o "$tmp_file" https://raw.githubusercontent.com/forma-cloud/FormaCloud/main/optima/formacloud_optima.yaml
+curl -fsSL -o "$tmp_file" https://raw.githubusercontent.com/zhang35/test-bash-jiaqi/main/formacloud_optima.yaml
 
 stack_name=FormaCloudOptima
 
