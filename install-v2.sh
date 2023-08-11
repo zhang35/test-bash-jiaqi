@@ -28,17 +28,21 @@ function stackSetOperationWait {
 }
 
 FORMACLOUD_ID=""
+FORMACLOUD_EXTERNALID=""
 REGIONS=()
 FULL_ORGANIZATION=false
 CW_ROLE_EXISTS=false
 FORMACLOUD_PRINCIPAL=872291417442
 FORMACLOUD_EVENT_BUS_ARN=arn:aws:events:us-west-2:872291417442:event-bus/savingbot-event-bus
-FORMACLOUD_EXTERNALID=$(uuidgen)
 
 while [[ $# -gt 0 ]]; do
     case $1 in
         -i)
             FORMACLOUD_ID="$2"
+            shift 2
+            ;;
+        -e)
+            FORMACLOUD_EXTERNALID="$2"
             shift 2
             ;;
         -r)
