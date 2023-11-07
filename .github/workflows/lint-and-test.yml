@@ -1,0 +1,51 @@
+# https://docs.github.com/en/actions/automating-builds-and-tests/building-and-testing-python
+name: Lint and run unit tests
+on:
+  push: {}
+  pull_request:
+    types: [reopened]
+jobs:
+  lint_and_test:
+    name: runner / pylint
+    runs-on: ubuntu-22.04
+    # Service containers to run with `runner-job`
+    services:
+      postgres:
+        image: postgres
+        env:
+          POSTGRES_PASSWORD: postgres
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+        ports:
+          - 5432:5432
+    steps:
+      - uses: actions/checkout@v3
+        with:
+          ref: ${{ github.head_ref }}
+      # https://github.com/actions/setup-python
+      - uses: actions/setup-python@v4
+        with:
+          python-version: "3.10"
+          cache: pip
+
+      - name: Install pip dependencies
+        run: pip install -r requirements.txt
+
+      - name: Lint with pylint
+        run: make pylint
+
+      - name: Run unit tests
+        run: source .devcontainer/template.envrc && make test
+
+      # TODO(Weiqi): fix PR checks after pushing commit
+      - name: Update graphql schema
+        run: |
+          if [[ "$(git status --porcelain|wc -l)" -gt 0 ]]; then
+            git config --global user.email graphql@schema.updater
+            git config --global user.name schema-updater
+            git commit -am "Update graphql schema"
+            git push
+          fi

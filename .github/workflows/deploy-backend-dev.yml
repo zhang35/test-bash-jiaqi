@@ -1,0 +1,67 @@
+name: deploy to dev
+on:
+  workflow_dispatch: {}
+env:
+  AWS_REGION: "us-west-2"
+  ECR_REPOSITORY: "backend"
+  PRODUCT_NAME: "saving"
+  ACCOUNT_ID: "234053888867"
+  CLUSTER_NAME: "dev-cluster"
+  PROD_SHARED_ACCOUNT_ID: "872291417442"
+  BASE_IMAGE_TAG: "base_main-2023-10-02T19-36-18" # keep it updated
+jobs:
+  BuildAndDeployDev:
+    runs-on: ubuntu-latest
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    steps:
+      - name: Configure aws prod-shared credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ env.PROD_SHARED_ACCOUNT_ID }}:role/GithubActionCICD
+          role-session-name: cicdrolesession
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-prod-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Pull base image
+        env:
+          ECR_REGISTRY: ${{ steps.login-prod-ecr.outputs.registry }}
+        run: |
+          docker pull $ECR_REGISTRY/$ECR_REPOSITORY:$BASE_IMAGE_TAG
+      - name: Get current date
+        run: echo "CURRENT_TIME=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
+      - name: Get branch name
+        run: echo "BRANCH=${GITHUB_REF_NAME//\//-}" >> $GITHUB_ENV
+      - name: Get image tag
+        run: echo "IMAGE_TAG=${PRODUCT_NAME}_${BRANCH}_${CURRENT_TIME}" >> $GITHUB_ENV
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: configure aws dev-shared credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ env.ACCOUNT_ID }}:role/GithubActionCICD
+          role-session-name: cicdrolesession
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            -f ./deployments/saving/Dockerfile \
+            --build-arg BASE_IMAGE_TAG=$BASE_IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "IMAGE_FULL_URL=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v3
+      - name: Upgrade helm release
+        run: |
+          aws eks update-kubeconfig --name dev-cluster
+          cd deployments/saving/saving-chart
+          helm upgrade saving-api . -f values-dev.yaml --set image.tag=$IMAGE_TAG
+      - name: Run migrations
+        run: NAMESPACE=shared IMAGE_FULL_URL=$IMAGE_FULL_URL make migrate-dev-dbs-in-k8s

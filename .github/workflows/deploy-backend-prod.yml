@@ -1,0 +1,70 @@
+name: deploy to prod
+on:
+  release:
+    types: [published]
+env:
+  AWS_REGION: "us-west-2"
+  ACCOUNT_ID: "872291417442"
+  ECR_REPOSITORY: "backend"
+  PRODUCT_NAME: "saving"
+  BASE_IMAGE_TAG: "base_main-2023-10-02T19-36-18" # keep it updated
+jobs:
+  DeployProd:
+    runs-on: ubuntu-latest
+    environment: production
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    steps:
+      - name: Get current date
+        run: echo "CURRENT_TIME=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
+      - name: Get image tag
+        run: echo "IMAGE_TAG=${PRODUCT_NAME}_release_${{ github.event.release.tag_name }}_${CURRENT_TIME}" >> $GITHUB_ENV
+      - name: Checkout repo
+        uses: actions/checkout@v3
+      - name: configure aws credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          role-to-assume: arn:aws:iam::${{ env.ACCOUNT_ID }}:role/GithubActionCICD
+          role-session-name: cicdrolesession
+          aws-region: ${{ env.AWS_REGION }}
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+      - name: Build, tag, and push image to Amazon ECR
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG \
+            -f ./deployments/saving/Dockerfile \
+            --build-arg BASE_IMAGE_TAG=$BASE_IMAGE_TAG .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "IMAGE_FULL_URL=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_ENV
+      - name: Helm tool installer
+        uses: Azure/setup-helm@v3
+      - name: Upgrade helm release
+        run: |
+          aws eks update-kubeconfig --name prod-cluster
+          cd deployments/saving/saving-chart
+          helm upgrade saving-api . -f values-prod.yaml --set image.tag=$IMAGE_TAG
+          cd ../../clarispend/clarispend-chart
+          for value_file in values/prod/*.yaml ; do
+            base_name=$(basename "$value_file")
+            file_name="${base_name%.*}"
+            helm upgrade --install clarispend-prod-${file_name} . -f "$value_file" -f values/shared/prod.yaml --set image.tag=$IMAGE_TAG
+          done
+          cd ../../aws-savingbot/aws-savingbot-chart
+          helm upgrade savingbot-prod . -f values-prod.yaml --set image.tag=${{ env.IMAGE_TAG }}
+          cd ../../optima-reports/optima-reports-chart
+          for value_file in values/prod/*.yaml ; do
+            base_name=$(basename "$value_file")
+            file_name="${base_name%.*}"
+            helm upgrade --install optima-reports-prod-${file_name} . -f "$value_file" -f values/shared/prod.yaml --set image.tag=$IMAGE_TAG
+          done
+      - name: Run migrations
+        run: NAMESPACE=shared IMAGE_FULL_URL=$IMAGE_FULL_URL make migrate-prod-dbs-in-k8s
+      - name: Slack Notification
+        uses: rtCamp/action-slack-notify@v2
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}
+          SLACK_MESSAGE: "Backend deployed to prod"
