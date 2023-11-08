@@ -1,15 +1,20 @@
-name: Manual trigger
+name: update customer info
 
 on:
   workflow_dispatch:
     inputs:
-      name:
-        description: "Who to greet"
-        default: "World"
+      org_name:
+        description: "Organization name"
+      billing_account_id:
+        description: "Billing account ID"
+      external_id_autopilot:
+        description: "External ID for Autopilot"
+      external_id_saving_bot:
+        description: "External ID for SavingBot"
 
 jobs:
     hello:
         runs-on: ubuntu-latest
         steps:
         - name: Hello Step
-          run: echo "Hello ${{ github.event.inputs.name }}"
+          run: echo "Hello ${{ github.event.inputs.name }} ${{ github.event.inputs.billing_account_id }} ${{ github.event.inputs.external_id_autopilot }} ${{ github.event.inputs.external_id_saving_bot }}"
