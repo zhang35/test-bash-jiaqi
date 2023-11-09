@@ -1,0 +1,19 @@
+name: onboarding customer
+
+on:
+  workflow_dispatch: {}
+  push:
+    branches:
+      - "main"
+jobs:
+    hello:
+        runs-on: ubuntu-latest
+        permissions:
+          id-token: write # This is required for requesting the JWT
+          contents: write # This is required for actions/checkout & creating pull requests
+          pull-requests: write # This is required for creating pull requests
+        steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
+        - name: Onboarding
+          run: echo "Hello"
