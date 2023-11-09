@@ -1,7 +1,7 @@
 name: onboarding customer
 
 on:
-  workflow_dispatch:
+  workflow_dispatch: {}
 
 jobs:
   job1:
