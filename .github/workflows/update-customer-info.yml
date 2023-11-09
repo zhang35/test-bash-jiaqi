@@ -16,6 +16,8 @@ jobs:
     hello:
         runs-on: ubuntu-latest
         steps:
+        - name: Checkout repo
+          uses: actions/checkout@v4
         - name: Hello Step
           run: |
-            echo "| ${org_name} | | ${billing_account_id} | ${external_id_autopilot} | | - Autopilot-v1.5| us-west-2 |||" >> ./assets/data/CustomerInfo.md
+            echo "| ${org_name} | | ${billing_account_id} | ${external_id_autopilot} | | - Autopilot-v1.5| us-west-2 |||" >> assets/data/CustomerInfo.md
