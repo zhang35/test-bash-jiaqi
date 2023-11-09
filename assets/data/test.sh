@@ -1,0 +1,1 @@
+echo "| wiz-ai-2 | | 387233477580| f22ec3f8-394f-4113-a9ed-7a2939e44b9d | | - Autopilot-v1.5                                       | us-west-2                                           |                        |                       |" >> assets/data/CustomerInfo.md

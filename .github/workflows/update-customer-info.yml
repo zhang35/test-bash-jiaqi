@@ -17,4 +17,5 @@ jobs:
         runs-on: ubuntu-latest
         steps:
         - name: Hello Step
-          run: echo "Hello ${{ github.event.inputs.name }} ${{ github.event.inputs.billing_account_id }} ${{ github.event.inputs.external_id_autopilot }} ${{ github.event.inputs.external_id_saving_bot }}"
+          run: |
+            echo "| ${org_name} | | ${billing_account_id} | ${external_id_autopilot} | | - Autopilot-v1.5| us-west-2 |||" >> assets/data/CustomerInfo.md
