@@ -26,9 +26,14 @@ jobs:
           uses: actions/checkout@v4
         - name: Update Customer Info
           run: echo "| ${{ github.event.inputs.org_name }} | | ${{ github.event.inputs.billing_account_id }} | ${{ github.event.inputs.external_id_autopilot }} | | ${{ github.event.inputs.autopilot_version }}||||" >> assets/data/CustomerInfo.md
+        - name: Get Time
+          id: time
+          uses: nanzm/get-time-action@master
+          with:
+            format: "YYYY-MM-DD-HH-mm-ss"
         - name: Create PR
           env:
-            BRANCH_NAME: update-customer-${{ github.event.inputs.org_name }} 
+            BRANCH_NAME: update-customer-${{ github.event.inputs.org_name }}-${{ steps.time.outputs.time }}
             GH_TOKEN: ${{ github.token }}
           run: |
             git config --global user.email CustomerInfoUpdater@auto.onboarding
