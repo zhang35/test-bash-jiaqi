@@ -20,18 +20,13 @@ jobs:
           contents: write # This is required for actions/checkout & creating pull requests
           pull-requests: write # This is required for creating pull requests
         steps:
-        - name: Get Time
-          id: time
-          uses: nanzm/get-time-action@master
-          with:
-            format: "YYYY-MM-DD-HH-mm-ss"
         - name: Checkout repo
           uses: actions/checkout@v4
         - name: Update Customer Info
           run: echo "| ${{ github.event.inputs.org_name }} | | ${{ github.event.inputs.billing_account_id }} | ${{ github.event.inputs.external_id_autopilot }} | | - Autopilot-v1.5| us-west-2 |||" >> assets/data/CustomerInfo.md
         - name: Create PR
           env:
-            BRANCH_NAME: update-customer-${{ steps.time.outputs.time }}
+            BRANCH_NAME: update-customer-${{ github.event.inputs.org_name }} 
             GH_TOKEN: ${{ github.token }}
           run: |
             git config --global user.email CustomerInfoUpdater@auto.onboarding
@@ -39,7 +34,7 @@ jobs:
             git checkout -b "$BRANCH_NAME"
             git add .
             if [[ "$(git status --porcelain|wc -l)" -gt 0 ]]; then
-              git commit --message "Update Customer Info"
+              git commit --message "Onboarding New Customer ${{ github.event.inputs.org_name }}"
               git push -u origin HEAD:$BRANCH_NAME
-              gh pr create --base main --head $BRANCH_NAME --title "Update Customer Info" --body "Update customer info. If this PRs got merged, the auto-onboarding workflow would get started."
+              gh pr create --base main --head $BRANCH_NAME --title "Onboarding New Customer ${{ github.event.inputs.org_name }}" --body "Merge this PR and start the auto-onboarding workflow."
             fi
