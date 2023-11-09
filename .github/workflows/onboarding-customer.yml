@@ -1,4 +1,4 @@
-name: Call a reusable workflow and use its outputs
+name: onboarding customer
 
 on:
   workflow_dispatch:
