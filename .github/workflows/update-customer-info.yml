@@ -1,4 +1,4 @@
-name: update customer info
+name: Onboarding Customers
 
 on:
   workflow_dispatch:
@@ -13,25 +13,14 @@ on:
         description: "External ID for SavingBot"
       autopilot_version:
         description: "Autopilot version"
-  workflow_call:
-    # Map the workflow outputs to job outputs
-    outputs:
-      org_name:
-        description: "Org name"
-        value: ${{ github.event.inputs.org_name }}
 jobs:
-  hello:
-    # Map the job outputs to step outputs
+  update-customer-info:
     runs-on: ubuntu-latest
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: write # This is required for actions/checkout & creating pull requests
       pull-requests: write # This is required for creating pull requests
     steps:
-    - id: step1
-      run: echo "firstword=hello" >> $GITHUB_OUTPUT
-    - id: step2
-      run: echo "secondword=world" >> $GITHUB_OUTPUT
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Update Customer Info
@@ -51,16 +40,18 @@ jobs:
         git checkout -b "$BRANCH_NAME"
         git add .
         if [[ "$(git status --porcelain|wc -l)" -gt 0 ]]; then
-          git commit --message "Onboarding New Customer ${{ github.event.inputs.org_name }}"
+          git commit --message "update customer info ${{ github.event.inputs.org_name }}"
           git push -u origin HEAD:$BRANCH_NAME
-          gh pr create --base main --head $BRANCH_NAME --title "Onboarding New Customer ${{ github.event.inputs.org_name }}" --body "Merge this PR and start the auto-onboarding workflow."
+          gh pr create --base main --head $BRANCH_NAME --title "Update customer info for ${{ github.event.inputs.org_name }}" --body "Update customer info for ${{ github.event.inputs.org_name }}. It will be synced to Slab."
         fi
-  Onboarding:
+  onboarding-customer:
     runs-on: ubuntu-latest
-    environment: onboard customer
+    environment: production  # Review required
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
     steps:
-      - name: Get current date
-        run: echo "CURRENT_TIME=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
+    - name: Checkout repo
+      uses: actions/checkout@v4
+    - name: Onboarding customer
+      run: echo "Onboarding Customer ${{ github.event.inputs.org_name }}"
