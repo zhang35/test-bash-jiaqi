@@ -16,3 +16,4 @@ https://github.com/forma-cloud/Backend/blob/main/assets/data/CustomerInfo.md
 | wiz-ai              |                   | 387233477580     | f22ec3f8-394f-4113-a9ed-7a2939e44b9d |                                      | - Autopilot-v1.5                                       | us-west-2                                           |                        |                       |
 | org | | 123 | abc | | - Autopilot-v1.5| us-west-2 |||
 | org123 | | 123 | abc | | - Autopilot-v1.5| us-west-2 |||
+| org456 | | 123 | abc | | autopilot-v1.5||||
