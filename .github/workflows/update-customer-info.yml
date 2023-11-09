@@ -11,6 +11,8 @@ on:
         description: "External ID for Autopilot"
       external_id_saving_bot:
         description: "External ID for SavingBot"
+      autopilot_version:
+        description: "Autopilot version"
 
 jobs:
     hello:
@@ -23,7 +25,7 @@ jobs:
         - name: Checkout repo
           uses: actions/checkout@v4
         - name: Update Customer Info
-          run: echo "| ${{ github.event.inputs.org_name }} | | ${{ github.event.inputs.billing_account_id }} | ${{ github.event.inputs.external_id_autopilot }} | | - Autopilot-v1.5| us-west-2 |||" >> assets/data/CustomerInfo.md
+          run: echo "| ${{ github.event.inputs.org_name }} | | ${{ github.event.inputs.billing_account_id }} | ${{ github.event.inputs.external_id_autopilot }} | | ${{ github.event.inputs.autopilot_version }}||||" >> assets/data/CustomerInfo.md
         - name: Create PR
           env:
             BRANCH_NAME: update-customer-${{ github.event.inputs.org_name }} 
