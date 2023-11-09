@@ -20,5 +20,5 @@ jobs:
           uses: actions/checkout@v4
         - name: Hello Step
           run: |
-            echo "| ${org_name} | | ${billing_account_id} | ${external_id_autopilot} | | - Autopilot-v1.5| us-west-2 |||" >> assets/data/CustomerInfo.md
+            echo "| ${{ github.event.inputs.org_name }} | | ${{ github.event.inputs.billing_account_id }} | ${{ github.event.inputs.external_id_autopilot }} | | - Autopilot-v1.5| us-west-2 |||" >> assets/data/CustomerInfo.md
             tail assets/data/CustomerInfo.md
