@@ -15,3 +15,4 @@ https://github.com/forma-cloud/Backend/blob/main/assets/data/CustomerInfo.md
 | usmverse-com        |                   | 594807163762     | 58fd8195-5843-44b7-b4d7-27e5fb4e3059 |                                      | - Autopilot-v1.5                                       | us-west-2                                           |                        |                       |
 | wiz-ai              |                   | 387233477580     | f22ec3f8-394f-4113-a9ed-7a2939e44b9d |                                      | - Autopilot-v1.5                                       | us-west-2                                           |                        |                       |
 | org | | 123 | abc | | - Autopilot-v1.5| us-west-2 |||
+| org123 | | 123 | abc | | - Autopilot-v1.5| us-west-2 |||
