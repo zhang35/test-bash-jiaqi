@@ -55,3 +55,12 @@ jobs:
           git push -u origin HEAD:$BRANCH_NAME
           gh pr create --base main --head $BRANCH_NAME --title "Onboarding New Customer ${{ github.event.inputs.org_name }}" --body "Merge this PR and start the auto-onboarding workflow."
         fi
+  Onboarding:
+    runs-on: ubuntu-latest
+    environment: onboard customer
+    permissions:
+      id-token: write # This is required for requesting the JWT
+      contents: read # This is required for actions/checkout
+    steps:
+      - name: Get current date
+        run: echo "CURRENT_TIME=$(date +'%Y-%m-%dT%H-%M-%S')" >> $GITHUB_ENV
