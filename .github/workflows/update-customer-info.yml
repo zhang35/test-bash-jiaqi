@@ -32,7 +32,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Update Customer Info
-      run: echo "| $ORG_NAME | | $BILLING_ACCOUNT_ID | $EXTERNAL_ID_AUTOPILOT | | $AUTOPILOT_VERSION||||" >> assets/data/CustomerInfo.md
+      run: echo "| $ORG_NAME | | $BILLING_ACCOUNT_ID | $EXTERNAL_ID_AUTOPILOT | $EXTERNAL_ID_SAVING_BOT | $AUTOPILOT_VERSION||||" >> assets/data/CustomerInfo.md
     - name: Get Time
       id: time
       uses: nanzm/get-time-action@master
