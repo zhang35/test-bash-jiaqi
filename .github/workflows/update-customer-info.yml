@@ -1,5 +1,4 @@
 name: Onboarding Customers
-
 on:
   workflow_dispatch:
     inputs:
@@ -13,6 +12,15 @@ on:
         description: "External ID for SavingBot"
       autopilot_version:
         description: "Autopilot version"
+env:
+  AWS_REGION: "us-west-2"
+  ACCOUNT_ID: "872291417442"
+  ECR_REPOSITORY: "backend"
+  ORG_NAME: ${{ github.event.inputs.org_name }}
+  BILLING_ACCOUNT_ID: $${{ github.event.inputs.billing_account_id }}
+  EXTERNAL_ID_AUTOPILOT: $${{ github.event.inputs.external_id_autopilot }}
+  EXTERNAL_ID_SAVING_BOT: $${{ github.event.inputs.external_id_saving_bot }}
+  AUTOPILOT_VERSION: $${{ github.event.inputs.autopilot_version }}
 jobs:
   update-customer-info:
     runs-on: ubuntu-latest
@@ -24,7 +32,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Update Customer Info
-      run: echo "| ${{ github.event.inputs.org_name }} | | ${{ github.event.inputs.billing_account_id }} | ${{ github.event.inputs.external_id_autopilot }} | | ${{ github.event.inputs.autopilot_version }}||||" >> assets/data/CustomerInfo.md
+      run: echo "| $ORG_NAME | | $BILLING_ACCOUNT_ID | $EXTERNAL_ID_AUTOPILOT | | $AUTOPILOT_VERSION||||" >> assets/data/CustomerInfo.md
     - name: Get Time
       id: time
       uses: nanzm/get-time-action@master
@@ -32,7 +40,7 @@ jobs:
         format: "YYYY-MM-DD-HH-mm-ss"
     - name: Create PR
       env:
-        BRANCH_NAME: update-customer-${{ github.event.inputs.org_name }}-${{ steps.time.outputs.time }}
+        BRANCH_NAME: update-customer-$ORG_NAME-${{ steps.time.outputs.time }}
         GH_TOKEN: ${{ github.token }}
       run: |
         git config --global user.email CustomerInfoUpdater@auto.onboarding
@@ -40,9 +48,9 @@ jobs:
         git checkout -b "$BRANCH_NAME"
         git add .
         if [[ "$(git status --porcelain|wc -l)" -gt 0 ]]; then
-          git commit --message "update customer info ${{ github.event.inputs.org_name }}"
+          git commit --message "update customer info $ORG_NAME"
           git push -u origin HEAD:$BRANCH_NAME
-          gh pr create --base main --head $BRANCH_NAME --title "Update customer info for ${{ github.event.inputs.org_name }}" --body "Update customer info for ${{ github.event.inputs.org_name }}. It will be synced to Slab."
+          gh pr create --base main --head $BRANCH_NAME --title "Update customer info for $ORG_NAME" --body "Update customer info for $ORG_NAME. It will be synced to Slab."
         fi
   onboarding-customer:
     runs-on: ubuntu-latest
@@ -54,4 +62,4 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Onboarding customer
-      run: echo "Onboarding Customer ${{ github.event.inputs.org_name }}"
+      run: echo "Onboarding Customer $ORG_NAME"
