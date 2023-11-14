@@ -17,10 +17,10 @@ env:
   ACCOUNT_ID: "872291417442"
   ECR_REPOSITORY: "backend"
   ORG_NAME: ${{ github.event.inputs.org_name }}
-  BILLING_ACCOUNT_ID: $${{ github.event.inputs.billing_account_id }}
-  EXTERNAL_ID_AUTOPILOT: $${{ github.event.inputs.external_id_autopilot }}
-  EXTERNAL_ID_SAVING_BOT: $${{ github.event.inputs.external_id_saving_bot }}
-  AUTOPILOT_VERSION: $${{ github.event.inputs.autopilot_version }}
+  BILLING_ACCOUNT_ID: ${{ github.event.inputs.billing_account_id }}
+  EXTERNAL_ID_AUTOPILOT: ${{ github.event.inputs.external_id_autopilot }}
+  EXTERNAL_ID_SAVING_BOT: ${{ github.event.inputs.external_id_saving_bot }}
+  AUTOPILOT_VERSION: ${{ github.event.inputs.autopilot_version }}
 jobs:
   update-customer-info:
     runs-on: ubuntu-latest
