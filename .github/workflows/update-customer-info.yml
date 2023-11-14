@@ -40,7 +40,7 @@ jobs:
         format: "YYYY-MM-DD-HH-mm-ss"
     - name: Create PR
       env:
-        BRANCH_NAME: update-customer-${ORG_NAME}-${{ steps.time.outputs.time }}
+        BRANCH_NAME: update-customer-${{ env.ORG_NAME }}-${{ steps.time.outputs.time }}
         GH_TOKEN: ${{ github.token }}
       run: |
         git config --global user.email CustomerInfoUpdater@auto.onboarding
