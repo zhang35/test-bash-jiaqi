@@ -18,3 +18,4 @@ https://github.com/forma-cloud/Backend/blob/main/assets/data/CustomerInfo.md
 | org123 | | 123 | abc | | - Autopilot-v1.5| us-west-2 |||
 | org456 | | 123 | abc | | autopilot-v1.5||||
 | org456 | | 123 | abc | def | autopilot-v1.5||||
+| org4567 | | 123 | abc | def | autopilot-v1.5 ||||
