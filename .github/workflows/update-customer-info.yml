@@ -32,7 +32,7 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Update Customer Info
-      run: echo "| $ORG_NAME | | $BILLING_ACCOUNT_ID | $EXTERNAL_ID_AUTOPILOT | $EXTERNAL_ID_SAVING_BOT | $AUTOPILOT_VERSION||||" >> assets/data/CustomerInfo.md
+      run: echo "| ${ORG_NAME} | | ${BILLING_ACCOUNT_ID} | ${EXTERNAL_ID_AUTOPILOT} | ${EXTERNAL_ID_SAVING_BOT} | ${AUTOPILOT_VERSION} ||||" >> assets/data/CustomerInfo.md
     - name: Get Time
       id: time
       uses: nanzm/get-time-action@master
@@ -40,17 +40,17 @@ jobs:
         format: "YYYY-MM-DD-HH-mm-ss"
     - name: Create PR
       env:
-        BRANCH_NAME: update-customer-$ORG_NAME-${{ steps.time.outputs.time }}
+        BRANCH_NAME: update-customer-${ORG_NAME}-${{ steps.time.outputs.time }}
         GH_TOKEN: ${{ github.token }}
       run: |
         git config --global user.email CustomerInfoUpdater@auto.onboarding
         git config --global user.name customer-info-updater
-        git checkout -b "$BRANCH_NAME"
+        git checkout -b "${BRANCH_NAME}"
         git add .
         if [[ "$(git status --porcelain|wc -l)" -gt 0 ]]; then
-          git commit --message "update customer info $ORG_NAME"
-          git push -u origin HEAD:$BRANCH_NAME
-          gh pr create --base main --head $BRANCH_NAME --title "Update customer info for $ORG_NAME" --body "Update customer info for $ORG_NAME. It will be synced to Slab."
+          git commit --message "update customer info ${ORG_NAME}"
+          git push -u origin HEAD:${BRANCH_NAME}
+          gh pr create --base main --head ${BRANCH_NAME} --title "Update customer info for ${ORG_NAME}" --body "Update customer info for ${ORG_NAME}. It will be synced to Slab."
         fi
   onboarding-customer:
     runs-on: ubuntu-latest
@@ -62,4 +62,4 @@ jobs:
     - name: Checkout repo
       uses: actions/checkout@v4
     - name: Onboarding customer
-      run: echo "Onboarding Customer $ORG_NAME"
+      run: echo "Onboarding Customer ${ORG_NAME}"
