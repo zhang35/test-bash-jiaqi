@@ -1,4 +1,4 @@
-name: onboarding customer
+name: onboarding customer 2
 
 on:
   workflow_dispatch: {}
