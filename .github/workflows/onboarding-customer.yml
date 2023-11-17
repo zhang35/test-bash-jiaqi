@@ -1,11 +1,6 @@
 name: onboarding customer
 
-on:
-  # workflow_dispatch: {}
-  workflow_run:
-    workflows: ["Update customer info"]
-    type: 
-      - "completed"
+on: workflow_call
 jobs:
   job1:
     runs-on: ubuntu-latest
@@ -13,7 +8,3 @@ jobs:
       - name: test
         run: |
           echo "hi"
-          for true
-          do
-            echo "Mendax Current number"
-          done

@@ -54,7 +54,7 @@ jobs:
   #       fi
   onboarding-customer:
     runs-on: ubuntu-latest
-    environment: onboarding customer  # Review required
+    # environment: onboarding customer  # Review required
     permissions:
       id-token: write # This is required for requesting the JWT
       contents: read # This is required for actions/checkout
@@ -63,3 +63,5 @@ jobs:
       uses: actions/checkout@v4
     - name: Onboarding customer
       run: echo "Onboarding Customer ${ORG_NAME}"
+  job2:
+    uses: zhang35/test-bash-jiaqi/.github/workflows/onboarding-customer.yml@v1
