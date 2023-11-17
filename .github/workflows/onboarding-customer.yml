@@ -10,4 +10,10 @@ jobs:
   job1:
     runs-on: ubuntu-latest
     steps:
-      - run: echo "hi"
+      - name: test
+        run: |
+          echo "hi"
+          for i in 1 2 3 4 5
+          do
+            echo "Mendax Current number: $i"
+          done
