@@ -1,9 +1,9 @@
 name: onboarding customer
 
 on:
-  workflow_dispatch: {}
+  # workflow_dispatch: {}
   workflow_run:
-    workflows: ["update-customer-info"]
+    workflows: ["Update customer info"]
     type: ["completed"]
 jobs:
   job1:
