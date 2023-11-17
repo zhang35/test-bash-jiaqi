@@ -64,4 +64,4 @@ jobs:
     - name: Onboarding customer
       run: echo "Onboarding Customer ${ORG_NAME}"
   job2:
-    uses: zhang35/test-bash-jiaqi/.github/workflows/onboarding-customer.yml
+    uses: zhang35/test-bash-jiaqi/.github/workflows/onboarding-customer.yml@main
