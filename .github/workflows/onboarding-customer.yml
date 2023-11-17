@@ -1,6 +1,10 @@
 name: onboarding customer
 
-on: workflow_call
+on: 
+  workflow_call:
+  push:
+    branches:
+      - main
 jobs:
   job1:
     runs-on: ubuntu-latest
