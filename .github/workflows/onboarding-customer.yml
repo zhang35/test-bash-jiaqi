@@ -4,6 +4,7 @@ on:
   workflow_dispatch: {}
   workflow_run:
     workflows: ["Update customer info"]
+    type: ["completed"]
 jobs:
   job1:
     runs-on: ubuntu-latest
