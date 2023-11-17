@@ -3,7 +3,7 @@ name: onboarding customer
 on:
   workflow_dispatch: {}
   workflow_run:
-    workflows: ["Update customer info"]
+    workflows: ["update-customer-info"]
     type: ["completed"]
 jobs:
   job1:
