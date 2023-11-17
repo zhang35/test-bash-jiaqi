@@ -4,7 +4,10 @@ on:
   workflow_call:
   push:
     branches:
-      - main
+      - "main"
+    paths:
+      - "!test1"
+  
 jobs:
   job1:
     runs-on: ubuntu-latest

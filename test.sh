@@ -4,6 +4,7 @@
 flag1=""
 flag2=""
 
+
 # Parse command-line arguments
 while [[ $# -gt 0 ]]; do
     case $1 in
