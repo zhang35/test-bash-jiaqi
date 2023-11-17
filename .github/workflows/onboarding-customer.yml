@@ -2,20 +2,10 @@ name: onboarding customer
 
 on:
   workflow_dispatch: {}
-
+  workflow_run:
+    workflows: ["Update customer info"]
 jobs:
   job1:
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: write # This is required for actions/checkout & creating pull requests
-      pull-requests: write # This is required for creating pull requests
-    uses: zhang35/test-bash-jiaqi/.github/workflows/update-customer-info.yml@main
-  job2:
-    permissions:
-      id-token: write # This is required for requesting the JWT
-      contents: write # This is required for actions/checkout & creating pull requests
-      pull-requests: write # This is required for creating pull requests
     runs-on: ubuntu-latest
-    needs: job1
     steps:
-      - run: echo ${{ needs.job1.outputs.org_name }}
+      - run: echo "hi"

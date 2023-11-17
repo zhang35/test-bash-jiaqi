@@ -1,4 +1,4 @@
-name: Onboarding Customers
+name: Update customer info
 on:
   workflow_dispatch:
     inputs:
