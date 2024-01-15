@@ -1,0 +1,39 @@
+name: deploy to prod
+  # Allows you to run this workflow on merge
+  push:
+    branches:
+      - main
+env:
+  REGION: us-west1
+  
+jobs:
+  GitHub-actions:
+    # Allow the job to fetch a GitHub ID token
+    permissions:
+      id-token: write
+      contents: read
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+          
+      - id: 'auth'
+        name: 'Authenticate to Google Cloud'
+        uses: 'google-GitHub-actions/auth@v1'
+        with:
+          create_credentials_file: true
+          workload_identity_provider: ${{ secrets.WORKLOAD_IDENTITY_PROVIDER }}
+          service_account: ${{ secrets.SERVICE_ACCOUNT_EMAIL }}
+                  
+      - id: 'deploy-cloud-run'
+        name: 'Deploy Cloud Run Hello World Python App'
+        uses: 'google-GitHub-actions/deploy-cloudrun@v1'
+        with:
+          service: 'hello-world'
+          region: 'us-west1'
+
+
+      - name: 'Use output'
+        run: 'curl "${{ steps.deploy-cloud-run.outputs.url }}"'
+        continue-on-error: true
