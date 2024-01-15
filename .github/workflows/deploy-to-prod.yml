@@ -1,8 +1,9 @@
 name: deploy to prod
-  # Allows you to run this workflow on merge
-  push:
-    branches:
-      - main
+on: 
+    workflow_call:
+    push:
+      branches:
+        - "main"
 env:
   REGION: us-west1
   
